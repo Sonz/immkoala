@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Copy files to the server
-        run: scp -r ${{ github.workspace }}/* root@49.232.28.218:/immkoala
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 49.232.28.218 >> ~/.ssh/known_hosts
+          scp -r ${{ github.workspace }}/* root@49.232.28.218:/immkoala
