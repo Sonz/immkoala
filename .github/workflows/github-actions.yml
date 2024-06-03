@@ -10,6 +10,8 @@ jobs:
   Copy-Files-To-The-Server:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Copy files to the server
         run: |
           mkdir -p ~/.ssh
