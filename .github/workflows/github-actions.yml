@@ -19,10 +19,6 @@ jobs:
   Copy-Files-To-The-Server:
     runs-on: ubuntu-latest
     steps:
-      - name: Add server to known hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H 49.232.28.218 >> ~/.ssh/known_hosts
       - name: Copy files to the server
         run: scp -r ${{ github.workspace }}/* root@49.232.28.218:/immkoala
         env:
