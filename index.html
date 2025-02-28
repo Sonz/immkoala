@@ -1,24 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>immkoala</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5ff;
+      color: #333;
+      line-height: 1.6;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      color: #0092ff;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-gap: 1.2rem;
+      position: relative;
+    }
+
+    .info-item {
+      background-color: rgba(240, 248, 255, 0.5);
+      border-radius: 8px;
+      padding: 1.2rem 1rem;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(0, 146, 255, 0.1);
+      text-align: center;
+      overflow: visible;
+    }
+
+    .info-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: linear-gradient(to bottom, #0092ff, #00d2ff);
+      transition: height 0.25s ease;
+    }
+
+    .info-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 146, 255, 0.15);
+      background-color: white;
+      z-index: 2;
+    }
+
+    .info-item:hover::before {
+      height: 100%;
+    }
+
+    .info-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #444;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      background-color: #ffffff;
+      color: #0092ff;
+      /* 修改这里，使用更浅的蓝色，与边框颜色一致 */
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      box-shadow: 0 3px 10px rgba(0, 146, 255, 0.1);
+      font-weight: 500;
+      white-space: nowrap;
+      z-index: 100;
+      pointer-events: none;
+      border: 1px solid rgba(0, 146, 255, 0.3);
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      transform: translateX(-50%) rotate(45deg);
+      z-index: -1;
+      border-right: 1px solid rgba(0, 146, 255, 0.3);
+      border-bottom: 1px solid rgba(0, 146, 255, 0.3);
+    }
+
+    .info-item:hover .tooltip {
+      top: -50px;
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+      color: #888;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <p title="偶像">immkoala</p>
-  <p title="v（已封印）">shudaixx</p>
-  <p title="昵称">yahaha</p>
-  <p title="v">moe9233</p>
-  <p title="台服战网">蹦蹦熊#318969</p>
-  <p title="德">漂流星辰</p>
-  <p title="DK">泡汤</p>
-  <p title="猎人">夏天泡汤</p>
-  <p title="暗黑4">愤怒的考拉</p>
-  <p title="github">Moe</p>
-  <p title="github">zxm</p>
-  <p title="github">zxmyunshipei</p>
-  <p title="gmail">romantickoala</p>
-  <p>欢迎来找我.ppt</p>
+  <div class="container">
+    <div class="header">
+      <h1>immkoala</h1>
+      <p>个人信息页面</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="tooltip">偶像</div>
+        <p class="info-text">immkoala</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">v（已封印）</div>
+        <p class="info-text">shudaixx</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">昵称</div>
+        <p class="info-text">yahaha</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">v</div>
+        <p class="info-text">moe9233</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">台服战网</div>
+        <p class="info-text">蹦蹦熊#318969</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">德</div>
+        <p class="info-text">漂流星辰</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">DK</div>
+        <p class="info-text">泡汤</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">猎人</div>
+        <p class="info-text">夏天泡汤</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">暗黑4</div>
+        <p class="info-text">愤怒的考拉</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">github</div>
+        <p class="info-text">Moe</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">github</div>
+        <p class="info-text">zxm</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">github</div>
+        <p class="info-text">zxmyunshipei</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">gmail</div>
+        <p class="info-text">romantickoala</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>欢迎来找我.ppt</p>
+    </div>
+  </div>
 </body>
+
 </html>
