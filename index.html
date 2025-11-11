@@ -141,6 +141,15 @@
       visibility: visible;
       transform: translateX(-50%) scale(1);
     }
+    .header .tooltip {
+      top: 50px;
+    }
+    .header:hover .tooltip {
+      top: 50px;
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) scale(1);
+    }
 
     .footer {
       text-align: center;
@@ -173,7 +182,8 @@
   <div class="container">
     <div class="header">
       <h1>immkoala</h1>
-      <p>个人信息页面</p>
+      <p class="tooltip">一个闲的蛋疼菊花还痒的普通大学生，在极度无聊的情况下建立了这个博客，跟大家分享一下心情跟使用电脑的心得。</p>
+      <p>当冥想的日子飞逝，喧嚣的日子把我们唤去，且在此留下些微的痕迹</p>
     </div>
 
     <div class="info-grid">
@@ -275,6 +285,11 @@
       <div class="info-item">
         <div class="tooltip">掘金</div>
         <p class="info-text">immkoala同志</p>
+      </div>
+
+      <div class="info-item">
+        <div class="tooltip">mmkoala.me</div>
+        <p class="info-text">萌萌熊</p>
       </div>
     </div>
 
