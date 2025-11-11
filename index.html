@@ -135,20 +135,55 @@
       border-bottom: 1px solid rgba(0, 146, 255, 0.3);
     }
 
+    .header .tooltip::after {
+      bottom: auto;
+      top: -6px;
+      border-right: none;
+      border-bottom: none;
+      border-left: 1px solid rgba(0, 146, 255, 0.3);
+      border-top: 1px solid rgba(0, 146, 255, 0.3);
+    }
+
     .info-item:hover .tooltip {
       top: -50px;
       opacity: 1;
       visibility: visible;
       transform: translateX(-50%) scale(1);
     }
-    .header .tooltip {
-      top: 50px;
-    }
-    .header:hover .tooltip {
-      top: 50px;
+
+    /* 为移动端添加点击触发效果 */
+    .info-item.active .tooltip {
+      top: -50px;
       opacity: 1;
       visibility: visible;
       transform: translateX(-50%) scale(1);
+    }
+
+    .header {
+      cursor: pointer;
+    }
+
+    .header .tooltip {
+      top: auto;
+      bottom: auto;
+      white-space: normal;
+      max-width: 90vw;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .header:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) scale(1);
+      margin-top: 0.8rem;
+    }
+
+    .header.active .tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) scale(1);
+      margin-top: 0.8rem;
     }
 
     .footer {
@@ -165,14 +200,65 @@
         padding: 1rem;
       }
 
+      .container {
+        padding: 1.5rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
       .info-grid {
         grid-template-columns: 1fr 1fr;
       }
+
+      /* 移动端tooltip样式优化 */
+      .tooltip {
+        white-space: normal;
+        max-width: calc(100vw - 4rem);
+        font-size: 0.8rem;
+      }
+
+      .info-item .tooltip {
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+      }
+
+      .info-item:hover .tooltip,
+      .info-item.active .tooltip {
+        transform: translateX(-50%) scale(1);
+      }
+
+      /* 移动端header tooltip优化 */
+      .header .tooltip {
+        max-width: calc(100vw - 3rem);
+        padding: 0.8rem 1rem;
+        line-height: 1.5;
+      }
+
+      .header:hover .tooltip,
+      .header.active .tooltip {
+        margin-top: 1rem;
+      }
     }
 
-    @media (max-width: 400px) {
+    /* @media (max-width: 400px) {
       .info-grid {
         grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+    } */
+
+    /* 桌面端禁用active类效果 */
+    @media (min-width: 769px) {
+      .info-item.active .tooltip {
+        display: none;
+      }
+      .header.active .tooltip {
+        display: none;
       }
     }
   </style>
@@ -302,6 +388,67 @@
       <p>欢迎来找我.ppt</p>
     </div>
   </div>
+
+  <script>
+    // 移动端点击触发tooltip
+    document.addEventListener('DOMContentLoaded', function() {
+      const items = document.querySelectorAll('.info-item');
+      const header = document.querySelector('.header');
+      
+      function isMobileDevice() {
+        return window.matchMedia('(max-width: 768px)').matches || 
+               ('ontouchstart' in window) || 
+               (navigator.maxTouchPoints > 0);
+      }
+      
+      // 处理info-item点击
+      items.forEach(item => {
+        item.addEventListener('click', function(e) {
+          if (isMobileDevice()) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // 关闭其他所有active项
+            items.forEach(otherItem => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('active');
+              }
+            });
+            header.classList.remove('active');
+            
+            // 切换当前项
+            this.classList.toggle('active');
+          }
+        });
+      });
+      
+      // 处理header点击
+      header.addEventListener('click', function(e) {
+        if (isMobileDevice()) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // 关闭所有info-item
+          items.forEach(item => {
+            item.classList.remove('active');
+          });
+          
+          // 切换header
+          this.classList.toggle('active');
+        }
+      });
+      
+      // 点击页面其他地方关闭所有tooltip
+      document.addEventListener('click', function(e) {
+        if (isMobileDevice()) {
+          items.forEach(item => {
+            item.classList.remove('active');
+          });
+          header.classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
