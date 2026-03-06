@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>萌萌熊</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+    :root {
+      --bg-color: #050505;
+      --card-color: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -13,390 +21,324 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f5ff;
-      color: #333;
-      line-height: 1.6;
-      padding: 2rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      /* 隐藏滚动条但保留滚动 */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* --- 动态流体极光背景 --- */
+    .ambient-background {
+      position: fixed;
+      top: -5%; /* 稍微扩大，防止视差移动时露边 */
+      left: -5%;
+      width: 110vw;
+      height: 110vh;
+      z-index: -1;
+      overflow: hidden;
+      background: #000;
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      /* 引入多重动画：位移形变 + 颜色流转 */
+      animation: float 25s infinite linear, colorShift 15s infinite alternate ease-in-out;
+      opacity: 0.7;
+      /* 混合模式让光斑交叠时更亮更绚丽 */
+      mix-blend-mode: screen;
+    }
+
+    .blob-1 {
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: #4facfe;
+      animation-delay: 0s, 0s;
+    }
+
+    .blob-2 {
+      bottom: -20%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: #7a00ff;
+      animation-delay: -5s, -2s;
+    }
+
+    .blob-3 {
+      top: 40%;
+      left: 60%;
+      width: 40vw;
+      height: 40vw;
+      background: #00f2fe;
+      animation-delay: -10s, -5s;
+    }
+
+    /* 额外增加一个光斑丰富色彩层次 */
+    .blob-4 {
+      top: 20%;
+      right: 15%;
+      width: 45vw;
+      height: 45vw;
+      background: #ff007f;
+      animation-delay: -15s, -8s;
+      opacity: 0.5;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+        /* 动态圆角产生如液体般的形变 */
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      }
+      33% {
+        transform: translate(12vw, -15vh) scale(1.3) rotate(120deg);
+        border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+      }
+      66% {
+        transform: translate(-15vw, 12vh) scale(0.8) rotate(240deg);
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1) rotate(360deg);
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      }
+    }
+
+    @keyframes colorShift {
+      0% { filter: blur(90px) hue-rotate(0deg); }
+      50% { filter: blur(120px) hue-rotate(180deg); }
+      100% { filter: blur(90px) hue-rotate(360deg); }
+    }
+
+    /* --- 页面主体 --- */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 6vh 2vw;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
       align-items: center;
     }
 
-    .container {
-      max-width: 900px;
-      width: 100%;
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      padding: 2.5rem;
-      position: relative;
-      z-index: 1;
-    }
-
     .header {
       text-align: center;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 5rem;
+      perspective: 1000px;
     }
 
     .header h1 {
-      font-size: 2.8rem;
-      color: #0092ff;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      letter-spacing: -0.5px;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      /* 玻璃质感文字 */
+      background: linear-gradient(to bottom right, #ffffff 20%, rgba(255,255,255,0.3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0px 4px 24px rgba(255,255,255,0.2));
     }
 
-    .info-grid {
+    .header p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    /* --- 交互式网格与光追踪 --- */
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      grid-gap: 1.2rem;
-      position: relative;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      /* 鼠标悬停网格时，未被悬停的卡片稍微变暗，突出当前焦点 */
     }
 
-    .info-item {
-      background-color: rgba(240, 248, 255, 0.5);
-      border-radius: 8px;
-      padding: 1.2rem 1rem;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.25s ease;
-      border: 1px solid rgba(0, 146, 255, 0.1);
-      text-align: center;
-      overflow: visible;
+    .cards-grid:hover .card {
+      opacity: 0.5;
     }
 
-    .info-item::before {
-      content: '';
+    .cards-grid .card:hover {
+      opacity: 1;
+    }
+
+    .card {
+      background-color: var(--card-color);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: opacity 0.4s ease, transform 0.1s ease;
+      /* 3D 变换基础属性 */
+      transform-style: preserve-3d;
+      will-change: transform;
+      cursor: crosshair;
+      /* 初始动画 */
+      opacity: 0;
+      transform: translateY(30px);
+      animation: riseUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    /* 毛玻璃效果 */
+    .card::before {
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 0;
-      background: linear-gradient(to bottom, #0092ff, #00d2ff);
-      transition: height 0.25s ease;
+      inset: 0;
+      border-radius: 20px;
+      background: inherit;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: -1;
     }
 
-    .info-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 146, 255, 0.15);
-      background-color: white;
-      z-index: 2;
+    /* 边框和手电筒光晕效果 (纯 CSS 变量驱动) */
+    .card::after,
+    .card-border {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
     }
 
-    .info-item:hover::before {
-      height: 100%;
-    }
-
-    .info-text {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #444;
-      position: relative;
+    /* 内部柔和发光 */
+    .card::after {
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+        rgba(255, 255, 255, 0.06),
+        transparent 40%
+      );
       z-index: 1;
     }
 
-    .tooltip {
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.8);
-      background-color: #ffffff;
-      color: #0092ff;
-      /* 修改这里，使用更浅的蓝色，与边框颜色一致 */
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-      box-shadow: 0 3px 10px rgba(0, 146, 255, 0.1);
-      font-weight: 500;
-      white-space: nowrap;
-      z-index: 100;
-      pointer-events: none;
-      border: 1px solid rgba(0, 146, 255, 0.3);
+    /* 外部边框高亮流光 */
+    .card-border {
+      background: radial-gradient(
+        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+        rgba(255, 255, 255, 0.5),
+        transparent 40%
+      );
+      z-index: 2;
+      /* 使用 mask 裁剪出仅边框的区域 */
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1px; /* 边框厚度 */
     }
 
-    .tooltip::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      width: 12px;
-      height: 12px;
-      background: #ffffff;
-      transform: translateX(-50%) rotate(45deg);
-      z-index: -1;
-      border-right: 1px solid rgba(0, 146, 255, 0.3);
-      border-bottom: 1px solid rgba(0, 146, 255, 0.3);
-    }
-
-    .header .tooltip::after {
-      bottom: auto;
-      top: -6px;
-      border-right: none;
-      border-bottom: none;
-      border-left: 1px solid rgba(0, 146, 255, 0.3);
-      border-top: 1px solid rgba(0, 146, 255, 0.3);
-    }
-
-    .info-item:hover .tooltip {
-      top: -50px;
+    .card:hover::after,
+    .card:hover .card-border {
       opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) scale(1);
     }
 
-    /* 为移动端添加点击触发效果 */
-    .info-item.active .tooltip {
-      top: -50px;
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) scale(1);
+    /* 卡片内容 */
+    .card-content {
+      position: relative;
+      z-index: 3;
+      /* 内部元素也稍微脱离卡片平面，增强 3D 感 */
+      transform: translateZ(30px);
     }
 
-    .header {
-      cursor: pointer;
+    .card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
     }
 
-    .header .tooltip {
-      top: auto;
-      bottom: auto;
-      white-space: normal;
-      max-width: 90vw;
-      text-align: center;
-      margin-top: 0.5rem;
+    .card .value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      word-break: break-word;
     }
 
-    .header:hover .tooltip {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) scale(1);
-      margin-top: 0.8rem;
+    /* 特殊卡片跨列 */
+    .card:nth-child(1),
+    .card:nth-child(2),
+    .card:nth-child(17) {
+      grid-column: span 2;
     }
 
-    .header.active .tooltip {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) scale(1);
-      margin-top: 0.8rem;
+    .card:nth-child(1) .value,
+    .card:nth-child(2) .value {
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #fff, #87cefa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+      .card:nth-child(n) {
+        grid-column: span 1;
+      }
+      .cards-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      /* 移动端关闭复杂的 3D 和光照，保证性能 */
+      .card { transform: none !important; }
+      .card::after, .card-border { display: none; }
+      .cards-grid:hover .card { opacity: 1; }
+    }
+
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .footer {
-      text-align: center;
-      margin-top: 2.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid #eee;
-      color: #888;
-      font-style: italic;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-
-      .container {
-        padding: 1.5rem;
-      }
-
-      .header h1 {
-        font-size: 2rem;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      /* 移动端tooltip样式优化 */
-      .tooltip {
-        white-space: normal;
-        max-width: calc(100vw - 4rem);
-        font-size: 0.8rem;
-      }
-
-      .info-item .tooltip {
-        left: 50%;
-        transform: translateX(-50%) scale(0.8);
-      }
-
-      .info-item:hover .tooltip,
-      .info-item.active .tooltip {
-        transform: translateX(-50%) scale(1);
-      }
-
-      /* 移动端header tooltip优化 */
-      .header .tooltip {
-        max-width: calc(100vw - 3rem);
-        padding: 0.8rem 1rem;
-        line-height: 1.5;
-      }
-
-      .header:hover .tooltip,
-      .header.active .tooltip {
-        margin-top: 1rem;
-      }
-    }
-
-    /* @media (max-width: 400px) {
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header h1 {
-        font-size: 1.8rem;
-      }
-    } */
-
-    /* 桌面端禁用active类效果 */
-    @media (min-width: 769px) {
-      .info-item.active .tooltip {
-        display: none;
-      }
-      .header.active .tooltip {
-        display: none;
-      }
+      margin-top: 5rem;
+      padding: 2rem;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 
 <body>
+  <!-- 动态极光背景 -->
+  <div class="ambient-background">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
   <div class="container">
     <div class="header">
       <h1>immkoala</h1>
-      <p class="tooltip">一个闲的蛋疼菊花还痒的普通大学生，在极度无聊的情况下建立了这个博客，跟大家分享一下心情跟使用电脑的心得。</p>
-      <p>当冥想的日子飞逝，喧嚣的日子把我们唤去，且在此留下些微的痕迹</p>
+      <p>当冥想的日子飞逝，喧嚣的日子把我们唤去，且在此留下些微的痕迹。一个无聊大学生的多重身份档案。</p>
     </div>
 
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="tooltip">偶像</div>
-        <p class="info-text">immkoala</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">v（已封印）</div>
-        <p class="info-text">shudaixx</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">昵称</div>
-        <p class="info-text">yahaha</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">v</div>
-        <p class="info-text">moe9233</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">QQ昵称</div>
-        <p class="info-text">追忆诺达希尔</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">台服战网</div>
-        <p class="info-text">蹦蹦熊#318969</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">德</div>
-        <p class="info-text">漂流星辰</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">DK</div>
-        <p class="info-text">泡汤</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">猎人</div>
-        <p class="info-text">夏天泡汤</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">暗黑4</div>
-        <p class="info-text">愤怒的考拉</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">github</div>
-        <p class="info-text">Moe</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">github</div>
-        <p class="info-text">zxm</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">github</div>
-        <p class="info-text">zxmyunshipei</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">gmail</div>
-        <p class="info-text">romantickoala</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">b站</div>
-        <p class="info-text">immkoala001</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">微博</div>
-        <p class="info-text">dddeeer444</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">生日</div>
-        <p class="info-text">12月3日</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">领证</div>
-        <p class="info-text">9月6日</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">封号纪念日</div>
-        <p class="info-text">10月14日</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">掘金</div>
-        <p class="info-text">immkoala同志</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">博客</div>
-        <p class="info-text">mmkoala.me</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">mmkoala.me</div>
-        <p class="info-text">萌萌熊</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">google</div>
-        <p class="info-text">XIAOMENG ZHANG</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">steam</div>
-        <p class="info-text">萌</p>
-      </div>
-
-      <div class="info-item">
-        <div class="tooltip">steam</div>
-        <p class="info-text">大哥牛逼</p>
-      </div>
+    <div class="cards-grid" id="cards-container">
+      <!-- 卡片数据由 JS 生成并注入，方便管理动画延迟 -->
     </div>
 
     <div class="footer">
@@ -405,62 +347,109 @@
   </div>
 
   <script>
-    // 移动端点击触发tooltip
-    document.addEventListener('DOMContentLoaded', function() {
-      const items = document.querySelectorAll('.info-item');
-      const header = document.querySelector('.header');
+    const data = [
+      { label: "偶像", value: "immkoala" },
+      { label: "V (已封印)", value: "shudaixx" },
+      { label: "昵称", value: "yahaha" },
+      { label: "V", value: "moe9233" },
+      { label: "QQ昵称", value: "追忆诺达希尔" },
+      { label: "台服战网", value: "蹦蹦熊#318969" },
+      { label: "德", value: "漂流星辰" },
+      { label: "DK", value: "泡汤" },
+      { label: "猎人", value: "夏天泡汤" },
+      { label: "暗黑4", value: "愤怒的考拉" },
+      { label: "Github", value: "Moe" },
+      { label: "Github", value: "zxm" },
+      { label: "Github", value: "zxmyunshipei" },
+      { label: "Gmail", value: "romantickoala" },
+      { label: "B站", value: "immkoala001" },
+      { label: "微博", value: "dddeeer444" },
+      { label: "生日", value: "12月3日" },
+      { label: "领证", value: "9月6日" },
+      { label: "封号纪念日", value: "10月14日" },
+      { label: "掘金", value: "immkoala同志" },
+      { label: "博客", value: "mmkoala.me" },
+      { label: "站点", value: "萌萌熊" },
+      { label: "Google", value: "XIAOMENG ZHANG" },
+      { label: "Steam", value: "萌" },
+      { label: "Steam", value: "大哥牛逼" }
+    ];
+
+    const container = document.getElementById('cards-container');
+
+    // 渲染卡片
+    data.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      // 级联动画延迟
+      card.style.animationDelay = `${index * 0.04}s`;
       
-      function isMobileDevice() {
-        return window.matchMedia('(max-width: 768px)').matches || 
-               ('ontouchstart' in window) || 
-               (navigator.maxTouchPoints > 0);
+      card.innerHTML = `
+        <div class="card-border"></div>
+        <div class="card-content">
+          <div class="label">${item.label}</div>
+          <div class="value">${item.value}</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // 核心交互逻辑：光标打光 + 3D 倾斜
+    const cards = document.querySelectorAll('.card');
+
+    // 背景视差交互 (环境光随鼠标晃动)
+    const ambientBg = document.querySelector('.ambient-background');
+    window.addEventListener('mousemove', (e) => {
+      // 计算鼠标在屏幕中的相对比例 (-0.5 到 0.5 之间)
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+      
+      // 让背景产生轻微的逆向位移，模拟深远的空间感
+      ambientBg.style.transform = `translate(${x * -80}px, ${y * -80}px)`;
+    });
+
+    // 处理光标位置 (用于光晕和边框高亮)
+    document.getElementById('cards-container').addEventListener("mousemove", e => {
+      for(const card of cards) {
+        const rect = card.getBoundingClientRect(),
+              x = e.clientX - rect.left,
+              y = e.clientY - rect.top;
+
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
       }
-      
-      // 处理info-item点击
-      items.forEach(item => {
-        item.addEventListener('click', function(e) {
-          if (isMobileDevice()) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // 关闭其他所有active项
-            items.forEach(otherItem => {
-              if (otherItem !== item) {
-                otherItem.classList.remove('active');
-              }
-            });
-            header.classList.remove('active');
-            
-            // 切换当前项
-            this.classList.toggle('active');
-          }
-        });
+    });
+
+    // 处理单张卡片的 3D 悬浮视差
+    cards.forEach(card => {
+      card.addEventListener("mousemove", e => {
+        // 如果是移动端，不执行 3D 逻辑
+        if(window.innerWidth <= 768) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element.
+        const y = e.clientY - rect.top;  // y position within the element.
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // 计算倾斜角度 (距离中心越远倾斜越大)
+        const rotateX = ((y - centerY) / centerY) * -10; // 最大倾斜 10 度
+        const rotateY = ((x - centerX) / centerX) * 10;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
       });
-      
-      // 处理header点击
-      header.addEventListener('click', function(e) {
-        if (isMobileDevice()) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // 关闭所有info-item
-          items.forEach(item => {
-            item.classList.remove('active');
-          });
-          
-          // 切换header
-          this.classList.toggle('active');
-        }
+
+      card.addEventListener("mouseleave", () => {
+        if(window.innerWidth <= 768) return;
+        // 鼠标离开时恢复平整
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        card.style.transition = `transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease`;
       });
-      
-      // 点击页面其他地方关闭所有tooltip
-      document.addEventListener('click', function(e) {
-        if (isMobileDevice()) {
-          items.forEach(item => {
-            item.classList.remove('active');
-          });
-          header.classList.remove('active');
-        }
+
+      card.addEventListener("mouseenter", () => {
+        // 取消恢复动画的延迟，使其能迅速跟随鼠标
+        card.style.transition = `transform 0.1s ease, opacity 0.4s ease`;
       });
     });
   </script>
