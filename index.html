@@ -163,6 +163,20 @@
       margin: 0 auto;
       font-weight: 300;
       line-height: 1.8;
+      display: grid;
+      cursor: default;
+    }
+
+    .header p .text-line {
+      grid-area: 1 / 1;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .header p .text-line.active {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* --- 交互式网格与光追踪 --- */
@@ -382,7 +396,10 @@
   <div class="container">
     <div class="header">
       <h1>immkoala</h1>
-      <p>当冥想的日子飞逝，喧嚣的日子把我们唤去，且在此留下些微的痕迹。一个无聊大学生的多重身份档案。</p>
+      <p>
+        <span class="text-line active">一个闲的蛋疼菊花还痒的普通大学生，在极度无聊的情况下建立了这个博客，跟大家分享一下心情跟使用电脑的心得。</span>
+        <span class="text-line">当冥想的日子飞逝，喧嚣的日子把我们唤去，且在此留下些微的痕迹。</span>
+      </p>
     </div>
 
     <div class="cards-grid" id="cards-container">
@@ -525,6 +542,15 @@
         card.classList.remove('touch-active');
       });
     });
+
+    // --- 副标题定时轮换 ---
+    const textLines = document.querySelectorAll('.header .text-line');
+    let currentLine = 0;
+    setInterval(() => {
+      textLines[currentLine].classList.remove('active');
+      currentLine = (currentLine + 1) % textLines.length;
+      textLines[currentLine].classList.add('active');
+    }, 5000);
 
     // --- 移动端特有：设备重力陀螺仪交互 ---
     // 让背景和整个卡片容器随手机倾斜而微微移动（极其高级的空间感）
