@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://immkoala.com/sitemap.xml
